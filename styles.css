@@ -7,137 +7,164 @@
     box-sizing: border-box;
 }
 
-a {
-  text-decoration: none;
-  color: black;
+.container{
+  width: 900px;
+  max-width: 90vw;
+  margin: auto;
+  text-align: center;
+  padding-top: 10px;
+  transition: transform .5s;
 }
 
-body, html {
-  overflow-x: hidden;
-}
-
-ul{
-  list-style: none;
-}
-
-.line{
-  width: 150px;
-  height: 2px;
-  margin: 10px auto;
-  border-radius: 5px;
-  background: #fdcae1;
-}
-
-.ctn{
-  padding: 7px 20px;
-  background: #ff9c9c;
-  color: black;
-  font-size: 3vmin;
-  font-weight: 600;
-  border-radius: 20px;
-  transition: .5s ease;
-}
-
-.ctn:hover{
-  background-color: #fdcae1;
-  box-shadow: 0px 5px 6px -7px black;
-}
-
-.navbar{
-  display: flex;
-  position: fixed;
-  width: 100%;
-  justify-content: space-between;
-  margin: 0;
-  padding: 25px;
-  box-shadow: 0px 5px 6px -7px black;
-  background: #fdcae1;
-}
-
-.nav-links{
+header{
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
 }
 
-.nav-links li{
-  margin: 0 12px;
-  padding: 5px 15px;
-  font-size: 28px;
-  font-weight: 500;
-  border-radius: 20px;
-  transition: .4s ease;
+header .icon-cart{
+  position: relative;
 }
 
-.nav-links li:hover{
-  background-color: #ff9c9c;
-  border-radius: 20px;
-  box-shadow: 0px 5px 6px -7px black;
-  transition: 0.3s ease;
+header .icon-cart span{
+  display: block;
+  width: 30px;
+  height: 30px;
+  background-color: rgb(247, 91, 34);
+  justify-content: center;
+  align-items: center;
+  color: whitesmoke;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  right: -22px;
 }
 
-.nav-links li a{
+svg{
+  width: 30px;
   cursor: pointer;
 }
 
-nav li.active{
-  background-color: #ff9c9c;
-}
-
-/*===header===*/
-
-header{
+.list-product .item img{
   width: 100%;
-  height: 100vh;
-  background-image: url(./img/inquietamente\ juguetes.jpg);
-  background-position: bottom;
-  background-size: cover;
+  border-radius: 15px;
 }
 
-/*===section products===*/
-
-
-section{
-  width: 100%;
-  padding: 80px 0;
-}
-
-.events .row{
-  margin-top: 50px;
-}
-
-.title{
+.list-product{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
   text-align: center;
-  font-size: 5vmin;
 }
 
-.row{
-  display: flex;
-  align-items: center;
-  width: 100%;
-  justify-content: space-between;
+.list-product .item{
+  background-color: #eeeee6;
+  padding: 15px;
+  border-radius: 15px;
 }
 
-.row .col {
-  width: 80%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.list-product .item h2{
+  padding: 10px;
+  font-weight: 600;
+  font-size: large;
 }
 
-.col img{
+.list-product .item .price{
+  letter-spacing: 7px;
+  font-size:medium;
+}
+
+.list-product .item button{
+  background-color: #353432;
+  color: aliceblue;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 15px;
+  margin-top: 12px;
+  cursor: pointer;
+}
+
+body.show-cart .cart-tab{
+  inset: 0 0 0 auto;
+}
+
+body.show-cart .container{
+  transform: translateX(-250px);
+}
+
+.cart-tab{
   width: 400px;
-  border-radius: 10px;
+  background-color: #353432;
+  color: #eeeee6;
+  position: fixed;
+  inset: 0 -400px 0 auto;
+  display: grid;
+  grid-template-rows: 70px 1fr 70px;
   transition: .5s ease;
 }
 
-.col img:hover{
+.cart-tab h1{
+  padding: 20px;
+  margin: 0;
+  font-weight: 300;
+}
+
+.cart-tab .btn{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.cart-tab .btn button{
+  background-color: #e8bc0e;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+}
+
+.cart-tab .btn .close{
+  background-color: #eeeee6;
+}
+
+.cart-tab .list-cart .item img{
+  width: 100%;
+  border-radius: 20px;
   padding: 5px;
+  margin: 0;
 }
 
-h4{
-  font-size: 4vmin;
-  margin: 20px auto;
+.cart-tab .list-cart .item{
+  display: grid;
+  grid-template-columns: 80px 140px 50px 1fr;
+  gap: 10px;
+  text-align: center;
+  align-items: center;
 }
 
+.list-cart .quantity span{
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  background-color: #eeeee6;
+  color: #555;
+  border-radius: 50%;
+  cursor: pointer;
+}
 
+.list-cart .quantity span:nth-child(2){
+  background-color: transparent;
+  color: #eeeee6;
+}
 
+.list-cart .item:nth-child(even){
+  background-color: #eee1;
+}
+
+.list-cart{
+  overflow: auto;
+}
+
+.list-cart::-webkit-scrollbar{
+  width: 0;
+}

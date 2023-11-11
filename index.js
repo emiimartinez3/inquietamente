@@ -1,84 +1,146 @@
-let usuario = prompt("Bienvenido !! Ingresa tu nombre");
+let iconCart = document.querySelector('.icon-cart');
+let closeCart = document.querySelector('.close');
+let body = document.querySelector('body');
+let listProductHtml = document.querySelector('.list-product');
+let listCartHtml = document.querySelector('.list-cart');
+let iconCartSpan = document.querySelector('.icon-cart span');
 
-function ingresoUsuario () {
-    while (usuario == ""){
-    alert(`No ingresaste tu nombre`);
-    usuario = prompt("Ingresa tu nombre");
+
+let listProducts = [];
+let carts = [];
+
+iconCart.addEventListener('click', ()=> {
+    body.classList.toggle('show-cart')
+})
+
+closeCart.addEventListener('click', ()=> {
+    body.classList.toggle('show-cart')
+})
+
+const addDataToHtml = () =>{
+    listProductHtml.innerHTML = '';
+    if(listProducts.length > 0){
+        listProducts.forEach(product => {
+            let newProduct = document.createElement('div');
+            newProduct.classList.add('item');
+            newProduct.dataset.id = product.id;
+            newProduct.innerHTML = `
+                    <img src="${product.image}" alt="" srcset="">
+                    <h2>${product.name}</h2>
+                    <div class="price">${product.price}</div>
+                    <button class="add-cart">AGREGAR</button>`;
+            listProductHtml.appendChild(newProduct);
+        })
     }
-    alert(`Bienvenido a Inquietamente Juguetes ${usuario}`);
 }
 
-ingresoUsuario();
+listProductHtml.addEventListener('click', (event) => {
+    let positionClick = event.target;
+    if(positionClick.classList.contains('add-cart')){
+        let product_id = positionClick.parentElement.dataset.id;
+        addToCart(product_id);
+    }
+})
 
-const productos = [
-    {nombre: "camioncito", precio: 2000},
-    {nombre: "camara", precio: 1500},
-    {nombre: "rompemoster", precio: 2000},
-    {nombre: "tateti", precio: 2500},
-    {nombre: "jirafa", precio: 2300}
-];
-
-let carrito = [];
-
-let seleccion = prompt("Desea comprar alugun producto? Escriba si/no");
-
-while(seleccion != "si" && seleccion != "no"){
-    alert("por favor ingresa si o no")
-    seleccion = prompt("Hola!! desea comprar algo ? si o no")
+const addToCart = (product_id) => {
+    let positionProduct = carts.findIndex((value) => value.product_id == product_id)
+    if(carts.length <= 0 ){
+        carts = [{
+            product_id: product_id,
+            quantity: 1
+        }]
+    }else if(positionProduct < 0){
+        carts.push({
+            product_id: product_id,
+            quantity: 1
+        });
+    }else{
+        carts[positionProduct].quantity = carts[positionProduct].quantity + 1;
+    }
+    addCartToHtml();
+    addCartToMemory();
 }
 
-if( seleccion == "si"){
-    alert("Buenisimo!!! estos son nuestros productos")
-    let totalProduct = productos.map((producto) => producto.nombre + " " + producto.precio + "$");
-    alert(totalProduct.join (" - "))
-} else if (seleccion == "no"){
-    alert("Gracias por visitarnos, hasta pronto!!")
+const addCartToMemory = ()=> {
+    localStorage.setItem('cart', JSON.stringify(carts));
 }
 
-while (seleccion != "no"){
-    let producto = prompt("agrega un producto al carrito");
-    let precio = 0;
-    if(producto == "camioncito" || producto == "camara" ||
-    producto == "rompemoster" || producto == "tateti" || producto == "jirafa"){
-        switch (producto) {
-            case "camioncito":
-                precio = 2000;
+const addCartToHtml = ()=> {
+    listCartHtml.innerHTML = '';
+    let totalQuantity = 0;
+    if(carts.length > 0){
+        carts.forEach(cart => {
+            totalQuantity = totalQuantity + cart.quantity;
+            let newCart = document.createElement('div');
+            newCart.classList.add('item');
+            newCart.dataset.id = cart.product_id
+            let orderProduct = listProducts.findIndex((value)=> value.id == cart.product_id);
+            let info = listProducts[orderProduct];
+            newCart.innerHTML = `
+            <div class="image">
+                <img src="${info.image}" alt="" srcset="">
+            </div>
+            <div class="name">
+                ${info.name}
+            </div>
+            <div class="total-price">
+                ${info.price * cart.quantity}
+            </div>
+            <div class="quantity">
+                <span class="menos"> < </span>
+                <span>${cart.quantity}</span>
+                <span class="mas"> > </span>
+            </div>`;
+            listCartHtml.appendChild(newCart);
+        }) 
+    }
+    iconCartSpan.innerText = totalQuantity;
+}
+
+listCartHtml.addEventListener('click', (event)=> {
+    let positionClick = event.target;
+    if(positionClick.classList.contains('menos') || positionClick.classList.contains('mas')){
+        let product_id = positionClick.parentElement.parentElement.dataset.id;
+        let type = 'menos';
+        if(positionClick.classList.contains('mas')){
+            type = 'mas';
+        }
+        changeQuantity(product_id, type);
+    }
+})
+
+const changeQuantity = (product_id, type) => {
+    let positionItemcart = carts.findIndex((value)=> value.product_id == product_id);
+    if(positionItemcart >= 0){
+        switch(type) {
+            case 'mas':
+                carts[positionItemcart].quantity = carts[positionItemcart].quantity + 1;
                 break;
-            case "camara":
-                precio = 1500;
-                break;
-            case "rompemoster":
-                precio = 2000;
-                break; 
-            case "tateti":
-                precio = 2500;
-                break; 
-            case "jirafa":
-                precio = 2300;
-                break; 
             default:
+                let valueChange = carts[positionItemcart].quantity - 1;
+                if(valueChange > 0){
+                    carts[positionItemcart].quantity = valueChange;
+                }else{
+                    carts.splice(positionItemcart, 1);
+                }
                 break;
         }
-        let unidad = parseInt(prompt("Ingresa la cantidad de productos que quiere llevar"))
-
-        carrito.push({producto, unidad, precio})
-        console.log(carrito)
-    } else {
-        alert("Perdon...ese producto no lo tenemos")
     }
-
-    seleccion = prompt("desea seguir comprando??")
-
-    while ( seleccion === "no"){
-        alert("gracias por su compra, nos vemos pronto!!!")
-        carrito.forEach((carritoFinal) => {
-        console.log(`Producto: ${carritoFinal.producto}, unidades: ${carritoFinal.unidad},
-        total a paggar por producto ${carritoFinal.unidad * carritoFinal.precio}`)
-        })
-        break;
-    }
+    addCartToMemory();
+    addCartToHtml();
 }
 
-const total = carrito.reduce((acc, el) => acc + el.precio * el.unidad, 0)
-alert(`el total a pagar por su compra es: ${total}`)
+const initApp = () => {
+    fetch('products.json')
+    .then(response => response.json())
+    .then(data => {
+        listProducts = data;
+        addDataToHtml();
 
+        if(localStorage.getItem('cart')){
+            carts = JSON.parse(localStorage.getItem('cart'));
+            addCartToHtml();
+        }
+    })
+}
+initApp();
