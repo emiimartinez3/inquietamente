@@ -40,6 +40,13 @@ listProductHtml.addEventListener('click', (event) => {
         let product_id = positionClick.parentElement.dataset.id;
         addToCart(product_id);
     }
+    Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Tu producto se agrego correctamente 😊",
+        showConfirmButton: false,
+        timer: 1500
+      });
 })
 
 const addToCart = (product_id) => {
